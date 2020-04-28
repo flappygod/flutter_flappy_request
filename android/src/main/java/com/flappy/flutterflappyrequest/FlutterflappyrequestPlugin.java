@@ -1,14 +1,13 @@
 package com.flappy.flutterflappyrequest;
 
-import androidx.annotation.NonNull;
-
 import com.flappygo.lilin.lxhttpclient.Asynctask.LXAsyncCallback;
 import com.flappygo.lilin.lxhttpclient.Exception.LXHttpException;
-import com.flappygo.lilin.lxhttpclient.Holder.LXHttpHeaderHolder;
 import com.flappygo.lilin.lxhttpclient.HttpTask.LXHttpTask;
 import com.flappygo.lilin.lxhttpclient.HttpTask.LXHttpsTask;
 import com.flappygo.lilin.lxhttpclient.LXHttpClient;
 import com.flappygo.lilin.lxhttpclient.LXHttpsClient;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
