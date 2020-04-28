@@ -472,51 +472,54 @@
         //NSString *host = challenge.protectionSpace.host;
         //创建证书
         NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+        //设置
+        [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
         //安装证书
         completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
         return;
     }
-    
-    //如果是验证本地的
-    
-    //本地的密码
-    NSString* password=@"";
-    //本地的资源文件名称
-    NSString* resourceName=@"";
-    //p12文件
-    NSString *thePath = [[NSBundle mainBundle] pathForResource:resourceName ofType:@"p12"];
-    //p12数据
-    NSData *PKCS12Data = [[NSData alloc] initWithContentsOfFile:thePath];
-    //retain
-    CFDataRef inPKCS12Data = (CFDataRef)CFBridgingRetain(PKCS12Data);
-    
-    SecIdentityRef identity;
-    
-    // 读取p12证书中的内容
-    OSStatus result = [self extractP12Data:inPKCS12Data
-                              withPassword:password
-                                toIdentity:&identity];
-    //读取不成功
-    if(result != errSecSuccess){
-        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
-        return;
+    //如果是客户端验证
+    else if([method isEqualToString:NSURLAuthenticationMethodClientCertificate]){
+        //如果是验证本地的
+        NSString* password=@"";
+        //本地的资源文件名称
+        NSString* resourceName=@"";
+        //p12文件
+        NSString *thePath = [[NSBundle mainBundle] pathForResource:resourceName ofType:@"p12"];
+        //p12数据
+        NSData *PKCS12Data = [[NSData alloc] initWithContentsOfFile:thePath];
+        //retain
+        CFDataRef inPKCS12Data = (CFDataRef)CFBridgingRetain(PKCS12Data);
+        
+        SecIdentityRef identity;
+        
+        // 读取p12证书中的内容
+        OSStatus result = [self extractP12Data:inPKCS12Data
+                                  withPassword:password
+                                    toIdentity:&identity];
+        //读取不成功
+        if(result != errSecSuccess){
+            completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
+            return;
+        }
+        //读取成功
+        SecCertificateRef certificate = NULL;
+        //赋值
+        SecIdentityCopyCertificate (identity, &certificate);
+        
+        const void *certs[] = {certificate};
+        
+        CFArrayRef certArray = CFArrayCreate(kCFAllocatorDefault, certs, 1, NULL);
+        
+        //创建证书
+        NSURLCredential *credential = [NSURLCredential credentialWithIdentity:identity
+                                                                 certificates:(NSArray*)CFBridgingRelease(certArray)
+                                                                  persistence:NSURLCredentialPersistencePermanent];
+        //返回过去
+        completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
+    }else{
+        completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge,nil);
     }
-    
-    //读取成功
-    SecCertificateRef certificate = NULL;
-    //赋值
-    SecIdentityCopyCertificate (identity, &certificate);
-    
-    const void *certs[] = {certificate};
-    
-    CFArrayRef certArray = CFArrayCreate(kCFAllocatorDefault, certs, 1, NULL);
-    
-    //创建证书
-    NSURLCredential *credential = [NSURLCredential credentialWithIdentity:identity
-                                                             certificates:(NSArray*)CFBridgingRelease(certArray)
-                                                              persistence:NSURLCredentialPersistencePermanent];
-    //返回过去
-    completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
     
 }
 
