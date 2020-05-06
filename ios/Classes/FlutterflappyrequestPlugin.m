@@ -32,7 +32,7 @@
         };
         //失败
         req.errorBlock=^(NSException*  error,NSInteger code){
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld",code]
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld",(long)code]
                                        message:error.description
                                        details:[FlappyJsonTool JSONObjectToJSONString:error.userInfo]]);
         };
@@ -64,7 +64,7 @@
         };
         //失败
         req.errorBlock=^(NSException*  error,NSInteger code){
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld",code]
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld",(long)code]
                                        message:error.description
                                        details:[FlappyJsonTool JSONObjectToJSONString:error.userInfo]]);
         };
@@ -96,7 +96,7 @@
         };
         //失败
         req.errorBlock=^(NSException*  error,NSInteger code){
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld",code]
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld",(long)code]
                                        message:error.description
                                        details:[FlappyJsonTool JSONObjectToJSONString:error.userInfo]]);
         };

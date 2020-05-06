@@ -347,7 +347,8 @@
     [req setHTTPShouldHandleCookies:self.enableCookie];
     //设置为post方式
     [req setHTTPMethod:@"POST"];
-    
+    //param格式
+    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     //添加header
     if(self.headerProperty!=nil){
         NSEnumerator *keyEnum = [self.headerProperty keyEnumerator];
