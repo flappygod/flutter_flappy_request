@@ -25,5 +25,8 @@
  *************************/
 +(NSDictionary*)JSONStringToDictionary:(NSString*)json;
 
++ (NSString *)URLEncodedString:(NSString*)str;
+
++(NSString *)URLDecodedString:(NSString*)str;
 
 @end

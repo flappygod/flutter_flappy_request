@@ -379,7 +379,7 @@
     NSEnumerator *keyEnum = [params keyEnumerator];
     id key;
     while (key = [keyEnum nextObject]) {
-        keyValueFormat = [NSString stringWithFormat:@"%@=%@&",key,[params valueForKey:key]];
+        keyValueFormat = [NSString stringWithFormat:@"%@=%@&",key,[FlappyJsonTool URLEncodedString:[params valueForKey:key]]];
         [result appendString:keyValueFormat];
     }
     NSString* paramStr=@"";

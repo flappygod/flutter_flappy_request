@@ -75,6 +75,40 @@
     return respStr;
 }
 
+/**
+ *  URLEncode
+ */
++ (NSString *)URLEncodedString:(NSString*)str
+{
+    // CharactersToBeEscaped = @":/?&=;+!@#$()~',*";
+    // CharactersToLeaveUnescaped = @"[].";
+    
+    NSString *unencodedString = str;
+    NSString *encodedString = (NSString *)
+    CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                              (CFStringRef)unencodedString,
+                                                              NULL,
+                                                              (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                              kCFStringEncodingUTF8));
+    
+    return encodedString;
+}
+
+/**
+ *  URLDecode
+ */
++(NSString *)URLDecodedString:(NSString*)str
+{
+    //NSString *decodedString = [encodedString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding ];
+    
+    NSString *encodedString = str;
+    NSString *decodedString  = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
+                                                                                                                     (__bridge CFStringRef)encodedString,
+                                                                                                                     CFSTR(""),
+                                                                                                                     CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
+    return decodedString;
+}
+
 
 
 @end
